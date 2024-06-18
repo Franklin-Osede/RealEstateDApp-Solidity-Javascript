@@ -20,7 +20,14 @@ contract RealEstate {
 
   }
 
-  
+  //MAPPING
+  mapping(uint256 => Property)private properties;
+  uint256 public propertyIndex;
+
+  //EVENTS
+  event PropertyListed(unint256 indexed id, address indexed owner, uint256 price);
+  event PropertySold(uint256 indexed id, address indexed oldOwner, address indexed 
+  newOwner, uint256 price); 
    
 
 
