@@ -2,6 +2,25 @@
 pragma solidity ^0.8.9;
 
 contract RealEstate {
+
+  //STATE VARIABLE
+  struct Property { 
+    uint256 productId;
+    address owner;
+    uint256 price;
+    string propertyTitle;
+    string category;
+    string images;
+    string propertyAddress;
+    string description;
+    address[] reviweers;
+    string[] reviews;
+
+
+
+  }
+
+  
    
 
 
@@ -26,6 +45,9 @@ contract RealEstate {
 
     function getProductReviews() external view returns(Review[] memory){}
 
-    function getUser
+    function getUserReviews() external view returns (Review[] memory){}
+    
+    function likeReview() external{}
 
+    function getHighesttratedProduct() external view returns (unit256){}
 }
