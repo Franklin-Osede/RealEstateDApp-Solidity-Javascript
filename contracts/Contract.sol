@@ -84,7 +84,40 @@ contract RealEstate {
 
    }
 
-    function updateProperty() external returns (uint256){}
+    function updateProperty(address owner, uint256 productId, string memory
+    _propertyTitle, string memory _category, string memory _images, string memory
+    _propertyAddress, string memory _description) external returns (uint256){
+
+      Property storage property = properties [productId];
+
+      require(property.owner == owner,"Your are not the owner");
+
+
+      property.propertyTitle = _propertyTitle;
+      property.category = _category;
+      property.images = _images;
+      property.propertyAddress = _propertyAddress;
+      property.description = _description;
+
+      return productId;
+
+    }
+
+  function updatePrice(address owner, uint256 productId, uint256 price)external
+  returns (string memory){
+
+    Property storage property = properties[productId];
+
+    require (property.owner = owner, "You are not the owner");
+
+    property.price = price;
+
+    return "Your Property price is updated";
+  }
+
+  
+  
+  
 
    function buyProperty() external payable{}
 
