@@ -115,13 +115,42 @@ contract RealEstate {
     return "Your Property price is updated";
   }
 
-  
-  
+
   
 
-   function buyProperty() external payable{}
+   function buyProperty(uint256 id, address buyer) external payable{
+    uint256 amount = msg.value;
 
-     function getAllProperties() public view returns (Property[] memory){}
+    require(amount >= properties[id].price,"Insufficient funds" );
+
+     Property storage property = properties[id];
+
+     (bool sent,) = payable(property.owner).call {value: amount}("");
+
+     if(sent){
+      property.owner = buyer;
+      emit PropertySold(id, property.owner, buyer, amount);
+     }
+
+   }
+   
+
+     function getAllProperties() public view returns (Property[] memory){
+      uint256 itemCount = propertyIndex;
+      uint256 currentIndex = 0;
+
+      Property[] memory items = new Property[](itemCount);
+      for (uint256 i=0; i < itemCount; i++){
+        uint256 currentId = i + 1;
+
+
+        Property storage currentItem = properties [currentId];
+        items[currentIndex] = currentItem;
+        currentIndex += 1;
+      }
+
+       return items;
+     }
 
      function getProperty() external view returns(){}
 
