@@ -152,9 +152,53 @@ contract RealEstate {
        return items;
      }
 
-     function getProperty() external view returns(){}
+     function getProperty(uint256 id) external view returns(
+      uint256,address,uint256, string memory, string memory, string memory, string
+      memory, string memory
+     ){
 
-     function getUserProperties() external view returns (Property[] memory){};
+
+      Property memory property = properties[id];
+      return(
+        property.productID,
+        property.owner,
+        property.price,
+        property.propertyTitle,
+        property.category,
+        property.images,
+        property.propertyAddress,
+        property.description
+
+      );
+     }
+
+     function getUserProperties(address user) external view returns (Property[] memory){
+
+      uint256 totalItemCount = propertyIndex;
+      uint256 itemCount = 0;
+      uint256 currentIndex = 0;
+
+      for (uint256 i = 0; i< totalItemCount; i++){
+        if(properties[i + 1].owner == user){
+          itemCount += 1;
+        }
+      }
+
+      Property[] memory items = new Property[](itemCount);
+      for(uint256 i = 0; i < totalItemCount; i++){
+        if(properties[i + 1].owner == user){
+          uint256 currentId = i + 1;
+          Property storage currentItem = properties[currentId];
+
+          items[currentIndex] = currentItem;
+
+          currentIndex += 1;
+
+        }
+      }
+
+      return items;
+     }
     
 
     //REVIEWS FUNCTION
