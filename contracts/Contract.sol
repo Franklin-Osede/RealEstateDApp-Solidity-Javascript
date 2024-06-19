@@ -13,7 +13,7 @@ contract RealEstate {
     string images;
     string propertyAddress;
     string description;
-    address[] reviweers;
+    address[] reviewers;
     string[] reviews;
 
 
@@ -25,20 +25,36 @@ contract RealEstate {
   uint256 public propertyIndex;
 
   //EVENTS
-  event PropertyListed(unint256 indexed id, address indexed owner, uint256 price);
+  event PropertyListed(uint256 indexed id, address indexed owner, uint256 price);
   event PropertySold(uint256 indexed id, address indexed oldOwner, address indexed 
   newOwner, uint256 price); 
   event PropertyResold(uint256 indexed id, address indexed oldOwner, address indexed newOwner, uint256
-  price)
-   
+  price);
 
+  //REVIEWSECTION
+  struct Review{
+    address reviewer;
+    uint256 productId;
+    uint256 rating; 
+    string comment;
+    uint256 likes;
+  }
+
+  struct Product{
+    uint256 productId;
+    uint256 totalRating;
+    uint256 numReviews;
+  }
+    
+    mapping(uint256 => Review[]) private reviews;
+    mapping (address => uint256[]) private userReviews;
 
    //FUNCTION IN CONTRACT
 
-   function listProperty() external returns (unit256) {
+   function listProperty() external returns (uint256) {
    }
 
-    function updateProperty() external returns (unit256){}
+    function updateProperty() external returns (uint256){}
 
    function buyProperty() external payable{}
 
@@ -58,5 +74,5 @@ contract RealEstate {
     
     function likeReview() external{}
 
-    function getHighesttratedProduct() external view returns (unit256){}
+    function getHighesttratedProduct() external view returns (uint256){}
 }
