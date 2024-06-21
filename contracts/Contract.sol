@@ -80,7 +80,8 @@ contract RealEstate {
     property.description = _description;
 
     emit PropertyListed(productId, owner, price);
-
+    
+    return productId;
 
    }
 
@@ -202,13 +203,81 @@ contract RealEstate {
     
 
     //REVIEWS FUNCTION
-    function addReview() external{}
+    function addReview(uint256 productId, uint256 rating, string calldata comment,
+    address user) external{
 
-    function getProductReviews() external view returns(Review[] memory){}
+      require(rating >= 1 && rating <= 5, "rating must be between 1 and 5");
 
-    function getUserReviews() external view returns (Review[] memory){}
+      Property storage property = properties[productId];
+      
+      property.reviewers.push(user);
+      property.reviews.push(comment);
+      
+
+      //REVIEWSSECTION
+      reviews[productId].push(Review(user, productId, rating, comment, 0));
+      userReviews[user].push(productId);
+      products[productId].totalRating += rating;
+      products[productId].numReviews++
+
+      emit ReviewAdded(productId, user, rating , comment);
+
+      reviewsCounter++;
+
+    }
+
+    function getProductReviews(uint256 productId) external view returns(Review[] memory)
+    {
+      return reviews [productId];
+    }
+
+    function getUserReviews(address user) external view returns (Review[] memory){
+
+      uint256 totalReviews = userReviews[user].length;
+
+      Review[] memory userProductReviews = new Review[](totalReviews);
+
+      for(uint256 i=0; i < userReviews[user].length; i++){
+        uint256 productId = userReviews[user][i];
+        Review[] memory productReviews = reviews[productId];
+      
+      for (uint256 j = 0; j < productReviews.length, j++){
+        if(productReviews[j].reviewer == user){
+          userProductReviews[i] = productReviews[j];
+        }
+      }
+
+      }
+
+     return userProductReviews
+    }
     
-    function likeReview() external{}
+    function likeReview(uint256 productId, uint256 reviewIndex, address user) external{
 
-    function getHighesttratedProduct() external view returns (uint256){}
+      Review storage review = reviews[productId][reviewIndex];
+
+      review.likes++;
+      emit ReviewLiked(productId, reviewIndex, user, review.likes);
+    }
+
+    function getHighesttratedProduct() external view returns (uint256){
+
+      uint256 highestRating = 0;
+      uint256 highestRatedProductId = 0;
+
+      for (uint256 i = 0; i < reviewsCounter; i++){
+        uint256 productId = i + 1;
+
+        if(products[productId].numReviews > 0){
+          uint256 avgRating = products[productId].totalRating / products [productId].
+          numReviews;
+
+          if(avgRating > highestRating){
+            highestRating = avgRating;
+            highestRatedProductId = productId;
+          }
+        }
+      }
+      return highestRatedProductId;
+    }
 }
