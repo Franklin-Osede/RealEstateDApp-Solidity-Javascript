@@ -34,7 +34,7 @@ contract RealEstate {
   //REVIEWSECTION
   struct Review{
     address reviewer;
-    uint256 productID;
+    uint256 productId;
     uint256 rating; 
     string comment;
     uint256 likes;
@@ -70,7 +70,7 @@ contract RealEstate {
     uint256 productId= propertyIndex++;
     Property storage property = properties[productId];
 
-    property.productID = productId;
+    property.productId = productId;
     property.owner = owner;
     property.price = price;
     property.propertyTitle = _propertyTitle;
@@ -109,7 +109,7 @@ contract RealEstate {
 
     Property storage property = properties[productId];
 
-    require (property.owner = owner, "You are not the owner");
+    require (property.owner == owner, "You are not the owner");
 
     property.price = price;
 
@@ -161,7 +161,7 @@ contract RealEstate {
 
       Property memory property = properties[id];
       return(
-        property.productID,
+        property.productId,
         property.owner,
         property.price,
         property.propertyTitle,
@@ -218,7 +218,7 @@ contract RealEstate {
       reviews[productId].push(Review(user, productId, rating, comment, 0));
       userReviews[user].push(productId);
       products[productId].totalRating += rating;
-      products[productId].numReviews++
+      products[productId].numReviews++;
 
       emit ReviewAdded(productId, user, rating , comment);
 
@@ -236,12 +236,12 @@ contract RealEstate {
       uint256 totalReviews = userReviews[user].length;
 
       Review[] memory userProductReviews = new Review[](totalReviews);
-
+       
       for(uint256 i=0; i < userReviews[user].length; i++){
         uint256 productId = userReviews[user][i];
         Review[] memory productReviews = reviews[productId];
       
-      for (uint256 j = 0; j < productReviews.length, j++){
+      for (uint256 j = 0; j < productReviews.length; j++){
         if(productReviews[j].reviewer == user){
           userProductReviews[i] = productReviews[j];
         }
@@ -249,7 +249,8 @@ contract RealEstate {
 
       }
 
-     return userProductReviews
+     return userProductReviews;
+
     }
     
     function likeReview(uint256 productId, uint256 reviewIndex, address user) external{
